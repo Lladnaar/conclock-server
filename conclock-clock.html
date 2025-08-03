@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Convention Clock</title>
+	<link rel="stylesheet" href="timer.css">	
+	<script type="module" src="js/conclock-clock.js"></script>
+</head>
+
+<body>
+ 	<div id="message" class="blue">Clock</div>
+ 	
+	<div id="clock"></div>
+	
+	<div id="settings">
+		<ul class="setting">
+			<li>Time</li>
+			<li><label>YYYY</label><input id="year" type="number" class="digit4"></li>
+			<li>-</li>
+			<li><label>MM</label><input id="month" type="number" class="digit2"></li>
+			<li>-</li>
+			<li><label>DD</label><input id="day" type="number" class="digit2"></li>
+			<li>&nbsp;</li>
+			<li><label>HH</label><input id="hour" type="number" class="digit2"></li>
+			<li>:</li>
+			<li><label>MM</label><input id="minute" type="number" class="digit2"></li>
+			<li>:</li>
+			<li><label>SS</label><input id="second" type="number" class="digit2"></li>
+			<li><button id="auto">Auto <span id="status"></span></button></li>
+			</dl>
+		</ul>
+
+		<ul class="setting">
+			<li>Format</li>
+			<li><select id="format">
+					<option value="HMS">13:24:35</option>
+					<option value="HM">13:24</option>
+					<option value="HMSX">1:24:35 PM</option>
+					<option value="HMX">1:24 PM</option>
+			</select></li>
+		</ul>
+
+		<button id="close">X</button>
+	</div>
+</body>
+
+</html>

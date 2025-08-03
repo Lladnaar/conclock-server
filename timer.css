@@ -1,0 +1,71 @@
+body {
+	background-color: black;
+	color: white;
+	margin: 0pt;
+	white-space: nowrap;
+	font-family: sans-serif;
+}
+
+#message {
+	width: 100%; height: 96pt;
+	line-height: 72pt;
+	text-align: center;
+	padding: 24pt 0 0;
+	position: fixed; top: 0;
+	overflow: hidden; resize: none;
+	border: none;
+	font-size: 72pt;
+}
+
+#clock {
+	width: 100%;
+	font-size: 144pt;
+	text-align: center;
+	position: fixed; top: 55%;
+	margin: -72pt 0;
+}
+
+#settings {
+	position: fixed; bottom: 0; left: 0; right: 0;
+	background-color: indigo;
+	padding: 12pt;
+	font-size: 10pt;
+}
+
+.grey { background-color: grey; }
+.red { background-color: red; }
+.green { background-color: green; }
+.blue { background-color: blue; }
+.orange { background-color: orange; }
+
+input.digit2 { width: 2.5em; }
+input.digit4 { width: 4.5em; }
+
+#status {
+	display: inline-block;
+	width: 0.8em; height: 0.8em;
+	border-radius: 0.4em;
+}
+
+#close {
+	position: absolute; top: 0; right: 0;
+}
+
+ul.setting {
+	text-align: center;
+	margin: 0 0 3pt 0;
+}
+
+ul.setting li {
+	display: inline-block;
+	margin: 0;
+	text-align: center;
+}
+
+label {
+	font-size: 0.5em;
+}
+
+label:after {
+    content:"\a"; white-space: pre;
+}
