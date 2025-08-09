@@ -1,0 +1,44 @@
+{
+    "openapi": "3.1.1",
+    "info": {
+        "title": "ConClock",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://localhost/v1"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "time": {
+                "type": "object",
+                "properties": {
+                    "time": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/time": {
+            "get": {
+                "description": "Returns current UTC time.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Current time.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/time"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
