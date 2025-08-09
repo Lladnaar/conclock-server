@@ -10,10 +10,13 @@
     "type": "git",
     "url": "git+https://github.com/Lladnaar/conclock-server.git"
   },
-  "author": "Mark Randall",
+  "author": "Lladnaar",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Lladnaar/conclock-server/issues"
   },
-  "homepage": "https://github.com/Lladnaar/conclock-server#readme"
+  "homepage": "https://github.com/Lladnaar/conclock-server#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
