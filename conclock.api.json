@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://localhost/v1"
+            "url": "https://localhost:9000/v1"
         }
     ],
     "components": {
