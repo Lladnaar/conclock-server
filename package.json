@@ -2,9 +2,10 @@
   "name": "conclock",
   "version": "1.0.0",
   "description": "ConClock server.",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +19,6 @@
   },
   "homepage": "https://github.com/Lladnaar/conclock-server#readme",
   "dependencies": {
-    "express": "^5.1.0",
-    "openapi-backend": "^5.13.0"
+    "express": "^5.1.0"
   }
 }
