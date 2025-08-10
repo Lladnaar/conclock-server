@@ -2,12 +2,16 @@
 import express from 'express';
 
 const app = express();
+const port = 9000;
 
 // use the json middleware
 app.use(express.json());
 
-// use openapi-backend to handle requests
-//app.use((req, res) => api.handleRequest(req, req, res));
+app.get('/', (req, res) => {
+  res.send('Hello');
+});
 
 // start server
-app.listen(9000, () => console.info('api listening at http://localhost:9000'));
+app.listen(port, () => {
+  console.info(`api listening at http://localhost:${port}`);
+});
