@@ -1,5 +1,5 @@
-// index.ts
 import express from 'express';
+import { router as timeRouter} from './time.ts';
 
 const app = express();
 const port = 9000;
@@ -13,12 +13,7 @@ app.get('/', (req: express.Request, res: express.Response) => {
   });
 });
 
-app.get('/time', (req: express.Request, res: express.Response) => {
-  res.send({
-    'url': `${req.protocol}://${req.get('host')}/time`,
-    'time': new Date()
-  });
-});
+app.use('/time', timeRouter);
 
 app.all('/{*any}', (req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send('Resource not found');
