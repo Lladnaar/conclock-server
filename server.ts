@@ -2,7 +2,7 @@
 
 import express from 'express';
 import settings from './settings.ts';
-import { router as timeRouter} from './time.ts';
+import timeRouter from './time.ts';
 
 // Server parameters
 
