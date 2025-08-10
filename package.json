@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ConClock server.",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
     "start": "node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
