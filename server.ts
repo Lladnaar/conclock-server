@@ -1,13 +1,12 @@
 // Core HTTP server definition
 
 import express from 'express';
+import settings from './settings.ts';
 import timeRouter from './time.ts';
 
 // Server parameters
 
 const server = express();
-const port = 9000;
-const appfiles = 'app';
 
 // Use JSON middleware
 
@@ -23,7 +22,7 @@ server.get('/', (req: express.Request, res: express.Response) => {
 
 // Resource definitions
 
-server.use('/app', express.static(appfiles));
+server.use('/app', express.static(settings.appfiles));
 server.use('/time', timeRouter);
 
 server.all('/{*any}', (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -32,6 +31,6 @@ server.all('/{*any}', (req: express.Request, res: express.Response, next: expres
 
 // Start server
 
-server.listen(port, () => {
-  console.info(`Listening at http://localhost:${port}`);
+server.listen(settings.port, () => {
+  console.info(`Listening at http://localhost:${settings.port}`);
 });
