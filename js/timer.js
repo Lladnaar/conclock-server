@@ -102,12 +102,12 @@ export class SmartTimer extends PersistantTimer {
 
 	retrieveTime() {
 		if (this.mode == 'auto')
-			fetch('https://api.conclock.lladnaar.net/time')
+			fetch('/time')
 			.then(function (response) {
 				return response.json();
 			})
 			.then(function (json) {
-				this.setOffset((new Date(json.datetime)) - Date.now());
+				this.setOffset((new Date(json.time)) - Date.now());
 				this.setStatus('auto');
 			}.bind(this))
 			.catch(function (error) {
