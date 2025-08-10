@@ -13,6 +13,13 @@ app.get('/', (req: express.Request, res: express.Response) => {
   });
 });
 
+app.get('/time', (req: express.Request, res: express.Response) => {
+  res.send({
+    'url': `${req.protocol}://${req.get('host')}/time`,
+    'time': new Date()
+  });
+});
+
 app.all('/{*any}', (req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send('Resource not found');
 });
