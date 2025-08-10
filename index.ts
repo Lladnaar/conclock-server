@@ -8,7 +8,13 @@ const port = 9000;
 app.use(express.json());
 
 app.get('/', (req: express.Request, res: express.Response) => {
-  res.send('Hello');
+  res.send({
+    'time': {'url': `${req.protocol}://${req.get('host')}/time`}
+  });
+});
+
+app.all('/{*any}', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  res.status(404).send('Resource not found');
 });
 
 // start server
