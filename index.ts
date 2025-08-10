@@ -1,27 +1,37 @@
+// Core HTTP server definition
+
 import express from 'express';
 import { router as timeRouter} from './time.ts';
 
-const app = express();
+// Server parameters
+
+const server = express();
 const port = 9000;
 const appfiles = 'app';
 
-// use the json middleware
-app.use(express.json());
+// Use JSON middleware
 
-app.get('/', (req: express.Request, res: express.Response) => {
+server.use(express.json());
+
+// HATEOAS discovery
+
+server.get('/', (req: express.Request, res: express.Response) => {
   res.send({
     'time': {'url': `${req.protocol}://${req.host}/time`}
   });
 });
 
-app.use('/app', express.static(appfiles));
-app.use('/time', timeRouter);
+// Resource definitions
 
-app.all('/{*any}', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+server.use('/app', express.static(appfiles));
+server.use('/time', timeRouter);
+
+server.all('/{*any}', (req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send('Resource not found');
 });
 
-// start server
-app.listen(port, () => {
-  console.info(`api listening at http://localhost:${port}`);
+// Start server
+
+server.listen(port, () => {
+  console.info(`Listening at http://localhost:${port}`);
 });
