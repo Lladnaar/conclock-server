@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Lladnaar/conclock-server#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "redis": "^5.8.0"
   }
 }
