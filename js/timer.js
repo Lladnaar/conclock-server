@@ -102,7 +102,7 @@ export class SmartTimer extends PersistantTimer {
 
 	retrieveTime() {
 		if (this.mode == 'auto')
-			fetch('/time')
+			fetch('/api/time')
 			.then(function (response) {
 				return response.json();
 			})
