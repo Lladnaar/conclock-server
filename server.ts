@@ -16,9 +16,8 @@ server.use(express.json());
 // Resource definitions
 
 server.use('/', express.static(settings.appfiles));
-server.use('/api/time', timeRouter);
-
 server.use('/api', apiRouter);
+server.use('/api/time', timeRouter);
 
 server.all('/{*any}', (req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send('Resource not found');
