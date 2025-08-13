@@ -7,10 +7,11 @@ const router = express.Router();
 // Resource and verb definitions 
 
 router.get('/', (req: express.Request, res: express.Response) => {
-  res.send({
-    'url': `${req.protocol}://${req.get('host')}/time`,
-    'time': new Date()
-  });
+    console.debug('Time requested');
+    res.send({
+      'url': `${req.protocol}://${req.host}${req.baseUrl}`,
+      'time': new Date()
+    });
 });
 
 export default router;
