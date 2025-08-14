@@ -1,38 +1,59 @@
 // user resource definition
 
 import express from 'express';
+import { createClient } from 'redis';
 
 const router = express.Router();
-var user = new Set();
+
+const client = createClient();
+client.on('error', err => console.error('Redis Client Error', err));
+await client.connect();
+console.info('Connected to Redis data server');
 
 // Resource and verb definitions 
 
 router.get('/:userid', (req: express.Request, res: express.Response) => {
-    console.debug(`User ${req.params.userid} requested`);
-    if (user.has(req.params.userid)) {
-        res.send({
-            'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
-            'userid': req.params.userid
-        });
-    }
-    else {
-        res.status(404).send();
-    }
-});
-
-router.put('/:userid', (req: express.Request, res: express.Response) => {
-    console.debug(`User ${req.params.userid} updated`);
-    user.add(req.params.userid);
-    res.status(201).send({
-      'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
-      'userid': req.params.userid
+    client.exists(`user:${req.params.userid}`).then((exists) => {
+        if (exists === 1) {
+            res.send({
+                'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
+                'userid': req.params.userid
+            });
+            console.debug(`User ${req.params.userid} retrieved`);
+        }
+        else {
+            res.status(404).send();
+            console.debug(`User ${req.params.userid} not found`);
+        }
+    }).catch(() => {
+        console.error('Unexpeceted User fetch error');
+        res.status(500).send({'error':'Unexpeceted fetch error'});
     });
 });
 
-router.delete('/:userid', (req: express.Request, res: express.Response) => {
-    console.debug(`User ${req.params.userid} deleted`);
-    user.delete(req.params.userid);
-    res.status(204).send();
+router.put('/:userid', (req: express.Request, res: express.Response) => {
+    client.set(`user:${req.params.userid}`,'true').then(() => {
+        res.status(201).send({
+            'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
+            'userid': req.params.userid
+        });
+        console.debug(`User ${req.params.userid} updated`);
+    }).catch(() => {
+        console.error('Unexpeceted User upsert error');
+        res.status(500).send({'error':'Unexpected upsert error'});
+    });
+});
+
+router.delete('/:userid', async (req: express.Request, res: express.Response) => {
+    try {
+        await client.del(`user:${req.params.userid}`);
+        res.status(204).send();
+        console.debug(`User ${req.params.userid} deleted`);
+    }
+    catch {
+        console.error('Unexpeceted User delete error');
+        res.status(500).send({'error':'Unexpected delete error'});
+    }
 });
 
 export default router;
