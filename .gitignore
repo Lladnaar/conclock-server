@@ -141,5 +141,8 @@ vite.config.ts.timestamp-*
 # Visual Studio Code
 .vscode
 
+# Redis
+dump.rdb
+
 # Project-specific files
 settings-local.json
