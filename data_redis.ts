@@ -19,7 +19,6 @@ export class User {
         const userString = await client.get(`user:${id}`);
         if (userString) {
             var user = JSON.parse(userString)
-            user.userid = id;
             return user;
         }
         else
@@ -29,13 +28,12 @@ export class User {
     static async add(user: any) {
         var id = uuid();
         await client.set(`user:${id}`, JSON.stringify(user));
-        user.userid = id;
-        return user;
+        return id;
     }
 
     static async set(id: string, user: any) {
         await client.set(`user:${id}`, JSON.stringify(user));
-        return User.get(id);
+        return user;
     }
 
     static delete(id: string) {
