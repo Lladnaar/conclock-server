@@ -5,43 +5,70 @@ import {client, User} from './data_redis.ts';
 
 const router = express.Router();
 
+class Resource {
+    static validate(resource: any, schema: any): any {
+        return resource;
+    }
+
+    static decorate(resource: any, id: string, urlbase: string) {
+        resource.id = id;
+        resource.url = `${urlbase}/${id}`
+    }
+}
+
 // Resource and verb definitions 
 
-router.get('/:userid', async (req: express.Request, res: express.Response) => {
+router.get('/:id', async (req: express.Request, res: express.Response) => {
     try {
-        var user = await User.get(req.params.userid);
+        var user = await User.get(req.params.id);
         if (user) {
+            Resource.decorate(user, req.params.id, `${req.protocol}://${req.host}${req.baseUrl}`);
             res.send(user);
-            console.debug(`User ${req.params.userid} retrieved`);
+            console.debug(`User ${req.params.id} retrieved`);
         }
         else {
             res.status(404).send();
-            console.debug(`User ${req.params.userid} not found`);
+            console.debug(`User ${req.params.id} not found`);
         }
     }
     catch (e: any) {
         console.error(e);
-        res.status(500).send({'error':'Unexpeceted fetch error'});
+        res.status(500).send({'error':'Unexpected fetch error'});
     }
 });
 
-router.put('/:userid', async (req: express.Request, res: express.Response) => {
+router.post('/', async (req: express.Request, res: express.Response) => {
     try {
-        await User.set(req.params.userid, req.body);
-        res.status(201).send(req.body);
-        console.debug(`User ${req.params.userid} updated`);
+        var id = await User.add(req.body);
+        var user = req.body;
+        Resource.decorate(user, id, `${req.protocol}://${req.host}${req.baseUrl}`)
+        res.status(201).send(user);
+        console.debug(`User ${id} added`);
     }
     catch (e: any) {
         console.error(e);
-        res.status(500).send({'error':'Unexpected upsert error'});
+        res.status(500).send({'error':'Unexpected add error'});
     }
 });
 
-router.delete('/:userid', async (req: express.Request, res: express.Response) => {
+router.put('/:id', async (req: express.Request, res: express.Response) => {
     try {
-        await User.delete(req.params.userid);
+        var user = await User.set(req.params.id, req.body);
+        Resource.decorate(user, req.params.id, `${req.protocol}://${req.host}${req.baseUrl}`);
+        res.status(201).send(user);
+        console.debug(`User ${req.params.id} updated`);
+    }
+    catch (e: any) {
+        console.error(e);
+        res.status(500).send({'error':'Unexpected update error'});
+    }
+});
+
+router.delete('/:id', async (req: express.Request, res: express.Response) => {
+    try {
+        await User.delete(req.params.id);
         res.status(204).send();
-        console.debug(`User ${req.params.userid} deleted`);
+        console.debug(`User ${req.params.id} deleted`);
     }
     catch (e: any) {
         console.error(e);

@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+import {v7 as uuid} from 'uuid';
 
 export const client = createClient();
 client.on('error', err => console.error('Redis Client Error', err));
@@ -14,12 +15,25 @@ export class User {
         return client.exists(`user:${id}`);
     }
 
-    static get(id: string) {
-        return client.get(`user:${id}`).then(user => JSON.parse(user));
+    static async get(id: string) {
+        const userString = await client.get(`user:${id}`);
+        if (userString) {
+            var user = JSON.parse(userString)
+            return user;
+        }
+        else
+            return userString;
     }
 
-    static set(id: string, user: object) {
-        return client.set(`user:${id}`, JSON.stringify(user));
+    static async add(user: any) {
+        var id = uuid();
+        await client.set(`user:${id}`, JSON.stringify(user));
+        return id;
+    }
+
+    static async set(id: string, user: any) {
+        await client.set(`user:${id}`, JSON.stringify(user));
+        return user;
     }
 
     static delete(id: string) {
