@@ -9,8 +9,8 @@ const router = express.Router();
 
 router.get('/:userid', async (req: express.Request, res: express.Response) => {
     try {
-        var exists = await User.exists(req.params.userid);
-        if (exists === 1) {
+        var exists = await User.get(req.params.userid);
+        if (exists) {
             res.send({
                 'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
                 'userid': req.params.userid

@@ -15,7 +15,7 @@ export class User {
     }
 
     static get(id: string) {
-
+        return client.get(`user:${id}`);
     }
 
     static set(id: string, content: object) {
