@@ -21,7 +21,19 @@ router.get('/:userid', async (req: express.Request, res: express.Response) => {
     }
     catch (e: any) {
         console.error(e);
-        res.status(500).send({'error':'Unexpeceted fetch error'});
+        res.status(500).send({'error':'Unexpected fetch error'});
+    }
+});
+
+router.post('/', async (req: express.Request, res: express.Response) => {
+    try {
+        var user = await User.add(req.body);
+        res.status(201).send(user);
+        console.debug(`User ${user.userid} added`);
+    }
+    catch (e: any) {
+        console.error(e);
+        res.status(500).send({'error':'Unexpected add error'});
     }
 });
 
@@ -33,7 +45,7 @@ router.put('/:userid', async (req: express.Request, res: express.Response) => {
     }
     catch (e: any) {
         console.error(e);
-        res.status(500).send({'error':'Unexpected upsert error'});
+        res.status(500).send({'error':'Unexpected update error'});
     }
 });
 
