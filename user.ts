@@ -7,8 +7,9 @@ const router = express.Router();
 
 // Resource and verb definitions 
 
-router.get('/:userid', (req: express.Request, res: express.Response) => {
-    User.exists(req.params.userid).then((exists) => {
+router.get('/:userid', async (req: express.Request, res: express.Response) => {
+    try {
+        var exists = await User.exists(req.params.userid);
         if (exists === 1) {
             res.send({
                 'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
@@ -20,23 +21,26 @@ router.get('/:userid', (req: express.Request, res: express.Response) => {
             res.status(404).send();
             console.debug(`User ${req.params.userid} not found`);
         }
-    }).catch(() => {
+    }
+    catch {
         console.error('Unexpected User fetch error');
         res.status(500).send({'error':'Unexpeceted fetch error'});
-    });
+    }
 });
 
-router.put('/:userid', (req: express.Request, res: express.Response) => {
-    User.set(req.params.userid, {'true':'true'}).then(() => {
+router.put('/:userid', async (req: express.Request, res: express.Response) => {
+    try {
+        await User.set(req.params.userid, {'true':'true'});
         res.status(201).send({
             'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
             'userid': req.params.userid
         });
         console.debug(`User ${req.params.userid} updated`);
-    }).catch(() => {
+    }
+    catch {
         console.error('Unexpected User upsert error');
         res.status(500).send({'error':'Unexpected upsert error'});
-    });
+    }
 });
 
 router.delete('/:userid', async (req: express.Request, res: express.Response) => {
