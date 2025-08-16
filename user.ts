@@ -43,14 +43,16 @@ router.put('/:userid', (req: express.Request, res: express.Response) => {
     });
 });
 
-router.delete('/:userid', (req: express.Request, res: express.Response) => {
-    console.debug(`User ${req.params.userid} deleted`);
-    client.del(`user:${req.params.userid}`).then(() => {
+router.delete('/:userid', async (req: express.Request, res: express.Response) => {
+    try {
+        await client.del(`user:${req.params.userid}`);
         res.status(204).send();
-    }).catch(() => {
+        console.debug(`User ${req.params.userid} deleted`);
+    }
+    catch {
         console.error('Unexpeceted User delete error');
         res.status(500).send({'error':'Unexpected delete error'});
-    });
+    }
 });
 
 export default router;
