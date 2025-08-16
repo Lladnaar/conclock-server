@@ -7,22 +7,22 @@ console.info('Connected to Redis data server');
 
 export class User {
     static list() {
-
+        return client.keys('user:*');
     }
-    
+
     static exists(id: string) {
         return client.exists(`user:${id}`);
     }
 
     static get(id: string) {
-        return client.get(`user:${id}`);
+        return client.get(`user:${id}`).then(user => JSON.parse(user));
     }
 
-    static set(id: string, content: object) {
-        return client.set(`user:${id}`, 'true');
+    static set(id: string, user: object) {
+        return client.set(`user:${id}`, JSON.stringify(user));
     }
 
-    static delete(id) {
+    static delete(id: string) {
         return client.del(`user:${id}`);
     }
 }

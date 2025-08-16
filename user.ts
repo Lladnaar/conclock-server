@@ -9,12 +9,9 @@ const router = express.Router();
 
 router.get('/:userid', async (req: express.Request, res: express.Response) => {
     try {
-        var exists = await User.get(req.params.userid);
-        if (exists) {
-            res.send({
-                'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
-                'userid': req.params.userid
-            });
+        var user = await User.get(req.params.userid);
+        if (user) {
+            res.send(user);
             console.debug(`User ${req.params.userid} retrieved`);
         }
         else {
@@ -22,23 +19,20 @@ router.get('/:userid', async (req: express.Request, res: express.Response) => {
             console.debug(`User ${req.params.userid} not found`);
         }
     }
-    catch {
-        console.error('Unexpected User fetch error');
+    catch (e: any) {
+        console.error(e);
         res.status(500).send({'error':'Unexpeceted fetch error'});
     }
 });
 
 router.put('/:userid', async (req: express.Request, res: express.Response) => {
     try {
-        await User.set(req.params.userid, {'true':'true'});
-        res.status(201).send({
-            'url': `${req.protocol}://${req.host}${req.baseUrl}/${req.params.userid}`,
-            'userid': req.params.userid
-        });
+        await User.set(req.params.userid, req.body);
+        res.status(201).send(req.body);
         console.debug(`User ${req.params.userid} updated`);
     }
-    catch {
-        console.error('Unexpected User upsert error');
+    catch (e: any) {
+        console.error(e);
         res.status(500).send({'error':'Unexpected upsert error'});
     }
 });
@@ -49,8 +43,8 @@ router.delete('/:userid', async (req: express.Request, res: express.Response) =>
         res.status(204).send();
         console.debug(`User ${req.params.userid} deleted`);
     }
-    catch {
-        console.error('Unexpected User delete error');
+    catch (e: any) {
+        console.error(e);
         res.status(500).send({'error':'Unexpected delete error'});
     }
 });
