@@ -69,3 +69,7 @@ label {
 label:after {
     content:"\a"; white-space: pre;
 }
+
+a {
+	text-decoration: none;
+}
