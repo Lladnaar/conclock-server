@@ -1,6 +1,6 @@
 # ConClock Server
 
-API and distribution server for ConClock clients.
+API and distribution server for [ConClock Clients](https://github.com/Lladnaar/conclock-client).
 
 Implements HTTP file server at http://host:9000/ of content in /app folder.
 
