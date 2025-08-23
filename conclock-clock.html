@@ -3,7 +3,7 @@
 
 <head>
 	<title>Convention Clock</title>
-	<link rel="stylesheet" href="timer.css">	
+	<link rel="stylesheet" href="css/timer.css">	
 	<script type="module" src="js/conclock-clock.js"></script>
 </head>
 
@@ -14,33 +14,37 @@
 	
 	<div id="settings">
 		<ul class="setting">
-			<li>Time</li>
-			<li><label>YYYY</label><input id="year" type="number" class="digit4"></li>
-			<li>-</li>
-			<li><label>MM</label><input id="month" type="number" class="digit2"></li>
-			<li>-</li>
-			<li><label>DD</label><input id="day" type="number" class="digit2"></li>
-			<li>&nbsp;</li>
-			<li><label>HH</label><input id="hour" type="number" class="digit2"></li>
-			<li>:</li>
-			<li><label>MM</label><input id="minute" type="number" class="digit2"></li>
-			<li>:</li>
-			<li><label>SS</label><input id="second" type="number" class="digit2"></li>
-			<li><button id="auto">Auto <span id="status"></span></button></li>
+			<li>Style</li>
+			<li>
+				<label>SIZE</label>
+				<select id="setting.style">
+					<option value=""></option>
+					<option value="short">Short</option>
+					<option value="medium">Medium</option>
+					<option value="long">Long</option>
+				</select>
+			</li>
+			<li>
+				<label>24 HOUR</label>
+				<select id="setting.hour12">
+					<option value=""></option>
+					<option value="true">12 hour</option>
+					<option value="false">24 hour</option>
+				</select>
+			</li>
 			</dl>
 		</ul>
 
 		<ul class="setting">
-			<li>Format</li>
-			<li><select id="format">
-					<option value="HMS">13:24:35</option>
-					<option value="HM">13:24</option>
-					<option value="HMSX">1:24:35 PM</option>
-					<option value="HMX">1:24 PM</option>
-			</select></li>
+			<li>Timezone</li>
+			<li>
+				<select id="setting.timezone">
+					<!-- timezones will be added by script -->>
+				</select>
+			</li>
 		</ul>
 
-		<button id="close">&#x2717;</button>
+		<button id="setting.close">&#x2717;</button>
 	</div>
 </body>
 

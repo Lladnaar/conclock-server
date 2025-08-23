@@ -47,7 +47,7 @@ input.digit4 { width: 4.5em; }
 	border-radius: 0.4em;
 }
 
-#close {
+#setting\.close {
 	position: absolute; top: 0; right: 0;
 }
 
@@ -68,4 +68,8 @@ label {
 
 label:after {
     content:"\a"; white-space: pre;
+}
+
+a {
+	text-decoration: none;
 }
