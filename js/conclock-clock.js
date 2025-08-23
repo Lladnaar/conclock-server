@@ -9,11 +9,22 @@ function initialisePage() {
 
 class Clock {
 	constructor() {
+		this.initialise();
+
 		this.timer = new Timer();
 		this.settings = new Settings("settings");
 
 		this.clock = document.getElementById("clock");
 		this.timer.on("tick", this.update.bind(this));
+	}
+	
+	initialise() {
+		// add time zones
+		const timezoneSelect = document.getElementById("setting.timezone");
+		timezoneSelect.add(new Option("", undefined));
+		for (const tz of Intl.supportedValuesOf('timeZone')) {
+			timezoneSelect.add(new Option(tz, tz));
+		}
 	}
 	
 	draw() {
