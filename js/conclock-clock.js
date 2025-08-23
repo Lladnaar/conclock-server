@@ -98,7 +98,7 @@ class Settings {
 	}
 
 	hotKey(event) {
-		if (this.settings.hidden && event.key == "Enter") {
+		if (this.settings.hidden && event.key == "Escape") {
 			this.show();
 			event.stopPropagation();
 		}
