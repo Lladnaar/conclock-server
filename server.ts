@@ -15,7 +15,7 @@ server.use(express.json());
 
 // Resource definitions
 
-server.use('/', express.static(settings.appfiles));
+server.use('/', express.static(settings.appPath));
 server.use('/api', apiRouter);
 server.use('/api/time', timeRouter);
 
@@ -26,5 +26,5 @@ server.all('/{*any}', (req: express.Request, res: express.Response, next: expres
 // Start server
 
 server.listen(settings.port, () => {
-  console.info(`Listening at http://localhost:${settings.port}`);
+  console.info(`Listening at http://localhost:${settings.serverPort}`);
 });
