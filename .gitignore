@@ -142,4 +142,4 @@ vite.config.ts.timestamp-*
 .vscode
 
 # Project-specific files
-settings-local.ts
+settings-local.json
