@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server/main.ts",
-    "dev": "nodemon server/main.ts"
+    "dev": "nodemon server/main.ts",
+    "build": "docker build -t conclock ."
   },
   "repository": {
     "type": "git",
