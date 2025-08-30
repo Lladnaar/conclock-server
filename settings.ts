@@ -1,21 +1,27 @@
-const settingsLocal = await import('./settings-local.ts')
-    .then(module => module.default)
-    .catch(() => ({})); // Fallback to empty object if local settings cannot be loaded
+import fs from "fs";
 
-const settingsDefault = {
-	serverPort: 9000,
-    appPath: 'app'
+// Read standard settings from distributed settings.json file
+
+let settingsDefault = {};
+try {
+    const jsonData = fs.readFileSync("./settings.json");
+    settingsDefault = JSON.parse(jsonData);
+} catch {
+    settingsDefault = {};
+    console.error("Error reading settings.json file");
+};
+
+// Read local settings from settings-local.json file (if it exists) to override standard settings
+// settings-local.json is .gitignored so that local changes are not committed to the repo
+
+let settingsLocal = {};
+try {
+    const jsonData = fs.readFileSync("./settings-local.json");
+    settingsLocal = JSON.parse(jsonData);
+} catch {
+    settingsLocal = {};
+    console.log("Error reading settings-local.json file");
 };
 
 const settings = {...settingsDefault, ...settingsLocal};
 export default settings;
-
-/* To create local setting overrides, copy the below sample and save as settings-local.ts
-
---- BEGIN COPY ---
-const settings = {
-    setting: "value"
-};
-
-export default settings;
---- END COPY --- */
