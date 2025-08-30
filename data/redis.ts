@@ -7,12 +7,13 @@ client.on('error', err => console.error('Redis Client Error: ', err));
 await client.connect();
 console.info('Connected to Redis data server');
 
-export function list(resource: string) {
-    return client.keys(`${resource}:*`);
+export async function list(resource: string) {
+    return (await client.keys(`${resource}:*`))
+        .map(string => string.slice(resource.length + 1));
 }
 
-export function exists(resource: string, id: string) {
-    return client.exists(`${resource}:${id}`);
+export async function exists(resource: string, id: string) {
+    return await client.exists(`${resource}:${id}`);
 }
 
 export async function get(resource: string, id: string) {
@@ -36,7 +37,7 @@ export async function set(resource: string, id: string, content: any) {
     return content;
 }
 
-export function del(resource: string, id: string) {
-    return client.del(`${resource}:${id}`);
+export async function del(resource: string, id: string) {
+    return await client.del(`${resource}:${id}`);
 }
 
