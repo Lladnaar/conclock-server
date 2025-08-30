@@ -1,4 +1,9 @@
 {
 	"serverPort": 9000,
-    "appPath": "client"
+    "appPath": "client",
+    "redis" : {
+        "url": "redis://redis:6379",
+        "username": "",
+        "password": ""
+    }
 }
