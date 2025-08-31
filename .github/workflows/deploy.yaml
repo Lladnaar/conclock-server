@@ -1,0 +1,47 @@
+name: deploy
+
+on:
+  release:
+    types: [created]
+
+jobs:
+    deploy:
+        name: Build Docker image
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write
+          
+        steps:
+          - name: Check out conclock
+            uses: actions/checkout@v4
+
+          - name: Set up Node
+            uses: actions/setup-node@v4
+            with:
+              node-version: 24
+
+          - name: Install dependencies
+            run: npm ci --omit=dev
+
+          - name: Log in to the Container registry
+            uses: docker/login-action@v3
+            with:
+              registry: ghcr.io
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: Extract metadata (tags, labels) for Docker
+            id: meta
+            uses: docker/metadata-action@v4
+            with:
+              images: ghcr.io/lladnaar/conclock
+
+          - name: Build and push Docker image
+            id: push
+            uses: docker/build-push-action@v4
+            with:
+              context: .
+              push: true
+              tags: ${{ steps.meta.outputs.tags }}
+              labels: ${{ steps.meta.outputs.labels }}
