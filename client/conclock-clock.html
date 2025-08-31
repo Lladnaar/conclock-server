@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Convention Clock</title>
+	<link rel="stylesheet" href="css/timer.css">	
+	<script type="module" src="js/conclock-clock.js"></script>
+</head>
+
+<body>
+ 	<div id="message" class="blue">Clock</div>
+ 	
+	<div id="clock"></div>
+	
+	<div id="settings">
+		<ul class="setting">
+			<li>Style</li>
+			<li>
+				<label>SIZE</label>
+				<select id="setting.style">
+					<option value=""></option>
+					<option value="short">Short</option>
+					<option value="medium">Medium</option>
+					<option value="long">Long</option>
+				</select>
+			</li>
+			<li>
+				<label>24 HOUR</label>
+				<select id="setting.hour12">
+					<option value=""></option>
+					<option value="true">12 hour</option>
+					<option value="false">24 hour</option>
+				</select>
+			</li>
+			</dl>
+		</ul>
+
+		<ul class="setting">
+			<li>Timezone</li>
+			<li>
+				<select id="setting.timezone">
+					<!-- timezones will be added by script -->>
+				</select>
+			</li>
+		</ul>
+
+		<button id="setting.close">&#x2717;</button>
+	</div>
+</body>
+
+</html>

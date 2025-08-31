@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lladnaar/conclock-server.git"
+    "url": "git+https://github.com/Lladnaar/conclock.git"
   },
   "author": "Lladnaar",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Lladnaar/conclock-server/issues"
+    "url": "https://github.com/Lladnaar/conclock/issues"
   },
-  "homepage": "https://github.com/Lladnaar/conclock-server#readme",
+  "homepage": "https://github.com/Lladnaar/conclock#readme",
   "dependencies": {
     "express": "^5.1.0"
   }
