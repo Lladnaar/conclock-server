@@ -2,11 +2,11 @@
   "name": "conclock",
   "version": "1.0.0",
   "description": "ConClock server.",
-  "main": "server.ts",
+  "main": "server/main.ts",
   "type": "module",
   "scripts": {
-    "start": "node server.ts",
-    "dev": "nodemon server.ts"
+    "start": "node server/main.ts",
+    "dev": "nodemon server/main.ts"
   },
   "repository": {
     "type": "git",

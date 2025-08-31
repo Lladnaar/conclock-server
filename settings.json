@@ -1,4 +1,4 @@
 {
 	"serverPort": 9000,
-    "appPath": "app"
+    "appPath": "client"
 }
