@@ -1,5 +1,3 @@
-// user resource definition
-
 import express from "express";
 import * as data from "./data/redis.ts";
 
@@ -71,11 +69,11 @@ router.post("/", async (req: express.Request, res: express.Response) => {
     try {
         let user = await User.fromBody(req.body).save();
         res.status(201).send(user.toObject());
-        console.debug(`User ${user.id} added`);
+        console.debug(`Added user:${user.id}`);
     }
-    catch (e: any) {
-        console.error(e);
-        res.status(500).send({error:"Unexpected add error"});
+    catch (error: any) {
+        res.status(500).send({error: `Unexpected POST error: ${error.message}`});
+        console.error(error);
     }
 });
 
@@ -83,11 +81,11 @@ router.get("/", async (req: express.Request, res: express.Response) => {
     try {
         let users = await User.getAll();
         res.status(200).send(users.map(user => user.toObject()));
-        console.debug(`User list retrieved`);
+        console.debug(`Retrieved user:*`);
     }
-    catch (e: any) {
-        console.error(e);
-        res.status(500).send({error:"Unexpected fetch error"});
+    catch (error: any) {
+        res.status(500).send({error: `Unexpected GET error: ${error.message}`});
+        console.error(error);
     }
 });
 
@@ -95,11 +93,17 @@ router.get("/:id", async (req: express.Request, res: express.Response) => {
     try {
         let user = await User.fromId(req.params.id).load();
         res.status(200).send(user.toObject());
-        console.debug(`User ${user.id} retrieved`);
+        console.debug(`Retrieved user:${user.id}`);
     }
-    catch (e: any) {
-        console.error(e);
-        res.status(500).send({error:"Unexpected fetch error"});
+    catch (error: any) {
+        if (error instanceof data.NotFoundError) {
+            res.status(404).send({error: error.message});
+            console.debug(error.message);
+        }
+        else {
+            res.status(500).send({error: `Unexpected GET error: ${error.message}`});
+            console.error(error);
+        }
     }
 });
 
@@ -107,11 +111,11 @@ router.put("/:id", async (req: express.Request, res: express.Response) => {
     try {
         let user = await User.fromId(req.params.id, req.body).save();
         res.status(201).send(user.toObject());
-        console.debug(`User ${user.id} updated`);
+        console.debug(`Updated user:${user.id}`);
     }
-    catch (e: any) {
-        console.error(e);
-        res.status(500).send({error:"Unexpected update error"});
+    catch (error: any) {
+        res.status(500).send({error: `Unexpected PUT error: ${error.message}`});
+        console.error(error);
     }
 });
 
@@ -119,11 +123,11 @@ router.delete("/:id", async (req: express.Request, res: express.Response) => {
     try {
         await User.fromId(req.params.id).delete();
         res.status(204).send();
-        console.debug(`User ${req.params.id} deleted`);
+        console.debug(`Deleted user:${req.params.id}`);
     }
-    catch (e: any) {
-        console.error(e);
-        res.status(500).send({error:"Unexpected delete error"});
+    catch (error: any) {
+        res.status(500).send({error: `Unexpected DELETE error: ${error.message}`});
+        console.error(error);
     }
 });
 
