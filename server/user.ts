@@ -9,7 +9,7 @@ class User {
     password: string;
     name: string;
     
-    static fromBody(body: any) {
+    static fromBody(body: object) {
         const user = new User();
         user.username = body.username;
         user.password = body.password;
@@ -71,7 +71,7 @@ router.post("/", async (req: express.Request, res: express.Response) => {
         res.status(201).send(user.toObject());
         console.debug(`Added user:${user.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected POST error: ${error.message}`});
         console.error(error);
     }
@@ -83,7 +83,7 @@ router.get("/", async (req: express.Request, res: express.Response) => {
         res.status(200).send(users.map(user => user.toObject()));
         console.debug("Retrieved user:*");
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected GET error: ${error.message}`});
         console.error(error);
     }
@@ -95,7 +95,7 @@ router.get("/:id", async (req: express.Request, res: express.Response) => {
         res.status(200).send(user.toObject());
         console.debug(`Retrieved user:${user.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         if (error instanceof data.NotFoundError) {
             res.status(404).send({error: error.message});
             console.debug(error.message);
@@ -113,7 +113,7 @@ router.put("/:id", async (req: express.Request, res: express.Response) => {
         res.status(201).send(user.toObject());
         console.debug(`Updated user:${user.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected PUT error: ${error.message}`});
         console.error(error);
     }
@@ -125,7 +125,7 @@ router.delete("/:id", async (req: express.Request, res: express.Response) => {
         res.status(204).send();
         console.debug(`Deleted user:${req.params.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected DELETE error: ${error.message}`});
         console.error(error);
     }

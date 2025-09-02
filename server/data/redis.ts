@@ -26,7 +26,7 @@ export async function get(resource: string, id: string) {
             const content = JSON.parse(jsonContent);
             return content;
         }
-        catch (error) {
+        catch {
             throw new FormatError(`Data for ${resource}:${id} is corrupted`);
         }
     }
@@ -34,13 +34,13 @@ export async function get(resource: string, id: string) {
         throw new NotFoundError(`No data found for ${resource}:${id}`);
 }
 
-export async function add(resource: string, content: any) {
+export async function add(resource: string, content: object) {
     const id = uuid();
     await client.set(`${resource}:${id}`, JSON.stringify(content));
     return id;
 }
 
-export async function set(resource: string, id: string, content: any) {
+export async function set(resource: string, id: string, content: object) {
     await client.set(`${resource}:${id}`, JSON.stringify(content));
     return content;
 }
