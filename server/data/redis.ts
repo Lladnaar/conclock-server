@@ -6,9 +6,11 @@ export class NotFoundError extends Error {};
 export class FormatError extends Error {};
 
 const client = createClient({ url: config.redis.url });
-client.on("error", err => console.error("Redis Client Error: ", err));
-await client.connect();
-console.info("Connected to Redis data server");
+client.on("connect", () => console.info("Connecing to Redis..."));
+client.on("ready", () => console.info("Redis connected."));
+client.on("error", error => console.error(`Redis Error: ${error.message || error.code}`));
+client.on("reconnecting", () => console.info("Reconnecting to Redis..."));
+client.connect();
 
 export async function list(resource: string) {
     return (await client.keys(`${resource}:*`))
@@ -23,7 +25,7 @@ export async function get(resource: string, id: string) {
     const jsonContent = await client.get(`${resource}:${id}`);
     if (jsonContent) {
         try {
-            const content = JSON.parse(jsonContent);
+            const content = JSON.parse(jsonContent.toString());
             return content;
         }
         catch {
