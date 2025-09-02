@@ -6,7 +6,8 @@ let settingsDefault = {};
 try {
     const jsonData = fs.readFileSync("./settings.json");
     settingsDefault = JSON.parse(jsonData);
-} catch {
+}
+catch {
     settingsDefault = {};
     console.error("Error reading settings.json file");
 };
@@ -18,7 +19,8 @@ let settingsLocal = {};
 try {
     const jsonData = fs.readFileSync("./settings-local.json");
     settingsLocal = JSON.parse(jsonData);
-} catch {
+}
+catch {
     settingsLocal = {};
     console.log("Error reading settings-local.json file");
 };

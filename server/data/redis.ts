@@ -1,14 +1,14 @@
-import { createClient } from 'redis';
-import {v7 as uuid} from 'uuid';
-import settings from '../settings.ts';
+import { createClient } from "redis";
+import {v7 as uuid} from "uuid";
+import settings from "../settings.ts";
 
 export class NotFoundError extends Error {};
 export class FormatError extends Error {};
 
 const client = createClient({ url: settings.redis.url });
-client.on('error', err => console.error('Redis Client Error: ', err));
+client.on("error", err => console.error("Redis Client Error: ", err));
 await client.connect();
-console.info('Connected to Redis data server');
+console.info("Connected to Redis data server");
 
 export async function list(resource: string) {
     return (await client.keys(`${resource}:*`))
@@ -23,7 +23,7 @@ export async function get(resource: string, id: string) {
     const jsonContent = await client.get(`${resource}:${id}`);
     if (jsonContent) {
         try {
-            const content = JSON.parse(jsonContent)
+            const content = JSON.parse(jsonContent);
             return content;
         }
         catch (error) {
