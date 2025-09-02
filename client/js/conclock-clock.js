@@ -4,7 +4,7 @@ import { Settings } from "./settings.js";
 window.addEventListener("load", initialisePage);
 
 function initialisePage() {
-    var clock = new Clock();
+    new Clock();
 }
 
 class Clock {

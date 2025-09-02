@@ -3,7 +3,6 @@ export class Timer extends EventTarget {
         super();
 
         // restore cached offset
-        this.setOffset(Number(localStorage.getItem("timer.offset"))) || 0;
         this.timer = setInterval(this.doTick.bind(this), 500);
 		
         this.fetchTime();
@@ -13,7 +12,7 @@ export class Timer extends EventTarget {
         return this.setOffset(time - Date.now());
     }
 
-    getTime(time) {
+    getTime() {
         return new Date(Date.now() + this.offset);
     }
 
