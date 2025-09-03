@@ -9,8 +9,8 @@ class User {
     password: string;
     name: string;
     
-    static fromBody(body: any) {
-        let user = new User();
+    static fromBody(body: object) {
+        const user = new User();
         user.username = body.username;
         user.password = body.password;
         user.name = body.name;
@@ -18,14 +18,14 @@ class User {
     }
 
     static fromId(id: string, body = {}) {
-        let user = User.fromBody(body);
+        const user = User.fromBody(body);
         user.id = id;
         return user;
     }
 
     static async getAll() {
-        let ids = await data.list("user");
-        return ids.map(id => User.fromId(id))
+        const ids = await data.list("user");
+        return ids.map(id => User.fromId(id));
     }
 
     async save() {
@@ -37,7 +37,7 @@ class User {
     }
 
     async load() {
-        let content = await data.get("user", this.id!);
+        const content = await data.get("user", this.id!);
         this.username = content?.username;
         this.password = content?.password;
         this.name = content?.name;
@@ -54,7 +54,7 @@ class User {
         return {
             username: this.username,
             password: this.password,
-            name: this.name
+            name: this.name,
         };
     }
 
@@ -67,11 +67,11 @@ class User {
 
 router.post("/", async (req: express.Request, res: express.Response) => {
     try {
-        let user = await User.fromBody(req.body).save();
+        const user = await User.fromBody(req.body).save();
         res.status(201).send(user.toObject());
         console.debug(`Added user:${user.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected POST error: ${error.message}`});
         console.error(error);
     }
@@ -79,11 +79,11 @@ router.post("/", async (req: express.Request, res: express.Response) => {
 
 router.get("/", async (req: express.Request, res: express.Response) => {
     try {
-        let users = await User.getAll();
+        const users = await User.getAll();
         res.status(200).send(users.map(user => user.toObject()));
-        console.debug(`Retrieved user:*`);
+        console.debug("Retrieved user:*");
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected GET error: ${error.message}`});
         console.error(error);
     }
@@ -91,11 +91,11 @@ router.get("/", async (req: express.Request, res: express.Response) => {
 
 router.get("/:id", async (req: express.Request, res: express.Response) => {
     try {
-        let user = await User.fromId(req.params.id).load();
+        const user = await User.fromId(req.params.id).load();
         res.status(200).send(user.toObject());
         console.debug(`Retrieved user:${user.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         if (error instanceof data.NotFoundError) {
             res.status(404).send({error: error.message});
             console.debug(error.message);
@@ -109,11 +109,11 @@ router.get("/:id", async (req: express.Request, res: express.Response) => {
 
 router.put("/:id", async (req: express.Request, res: express.Response) => {
     try {
-        let user = await User.fromId(req.params.id, req.body).save();
+        const user = await User.fromId(req.params.id, req.body).save();
         res.status(201).send(user.toObject());
         console.debug(`Updated user:${user.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected PUT error: ${error.message}`});
         console.error(error);
     }
@@ -125,7 +125,7 @@ router.delete("/:id", async (req: express.Request, res: express.Response) => {
         res.status(204).send();
         console.debug(`Deleted user:${req.params.id}`);
     }
-    catch (error: any) {
+    catch (error: unknown) {
         res.status(500).send({error: `Unexpected DELETE error: ${error.message}`});
         console.error(error);
     }
