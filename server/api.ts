@@ -1,16 +1,16 @@
-// time resource definition
-
 import express from "express";
 
+// REST router
+
 const router = express.Router();
-
-// Resource and verb definitions 
-
-router.get("/", (req: express.Request, res: express.Response) => {
-    res.send({
-        time: {url: `${req.protocol}://${req.host}${req.baseUrl}/time`},
-        user: {url: `${req.protocol}://${req.host}${req.baseUrl}/user`},
-    });
-});
-
+router.get("/", getAll);
 export default router;
+
+// REST verb definitions 
+
+function getAll(req: express.Request, res: express.Response) {
+    res.send({
+        time: {url: `${req.baseUrl}/time`},
+        user: {url: `${req.baseUrl}/user`},
+    });
+}

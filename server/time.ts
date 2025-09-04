@@ -1,17 +1,18 @@
-// time resource definition
-
 import express from "express";
 
+// REST router
+
 const router = express.Router();
+router.get("/", getTime);
+export default router;
 
-// Resource and verb definitions 
+// REST verb definitions 
 
-router.get("/", (req: express.Request, res: express.Response) => {
+function getTime(req: express.Request, res: express.Response) {
+
     console.debug("Time requested");
     res.send({
-        url: `${req.protocol}://${req.host}${req.baseUrl}`,
+        url: `${req.baseUrl}`,
         time: new Date(),
     });
-});
-
-export default router;
+}

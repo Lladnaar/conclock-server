@@ -1,8 +1,18 @@
 import express from "express";
 import * as data from "./data/redis.ts";
 
-const router = express.Router();
+// REST router
 
+const router = express.Router();
+router.get("/", getUserAll);
+router.get("/:id", getUser);
+router.post("/", postUser);
+router.put("/:id", putUser);
+router.delete("/:id", deleteUser);
+export default router;
+
+// User resource
+ 
 type RestUser = {
     id?: string,
     username?: string,
@@ -70,16 +80,9 @@ class User {
     }
 }
 
-// Resource and verb definitions 
-function formatError(verb: string, error: unknown) {
-    console.error(error);
-    if (error instanceof Error)
-        return { error: `Unexpected ${verb} error: ${error?.message}` };
-    else
-        return { error: "Unknown ${verb} error" };
-}
+// REST verb definitions 
 
-router.post("/", async (req: express.Request, res: express.Response) => {
+async function postUser(req: express.Request, res: express.Response) {
     try {
         const user = await User.fromBody(req.body).save();
         res.status(201).send(user.toRest(req.baseUrl));
@@ -88,9 +91,9 @@ router.post("/", async (req: express.Request, res: express.Response) => {
     catch (error: unknown) {
         res.status(500).send(formatError("POST", error));
     }
-});
+}
 
-router.get("/", async (req: express.Request, res: express.Response) => {
+async function getUserAll(req: express.Request, res: express.Response) {
     try {
         const users = await User.getAll();
         res.status(200).send(users.map(user => user.toRest(req.baseUrl)));
@@ -99,9 +102,9 @@ router.get("/", async (req: express.Request, res: express.Response) => {
     catch (error: unknown) {
         res.status(500).send(formatError("GET", error));
     }
-});
+}
 
-router.get("/:id", async (req: express.Request, res: express.Response) => {
+async function getUser(req: express.Request, res: express.Response) {
     try {
         const user = await User.fromId(req.params.id!).load();
         res.status(200).send(user.toRest(req.baseUrl));
@@ -116,9 +119,9 @@ router.get("/:id", async (req: express.Request, res: express.Response) => {
             res.status(500).send(formatError("GET", error));
         }
     }
-});
+}
 
-router.put("/:id", async (req: express.Request, res: express.Response) => {
+async function putUser(req: express.Request, res: express.Response) {
     try {
         const user = await User.fromId(req.params.id!, req.body).save();
         res.status(201).send(user.toRest(req.baseUrl));
@@ -127,9 +130,9 @@ router.put("/:id", async (req: express.Request, res: express.Response) => {
     catch (error: unknown) {
         res.status(500).send(formatError("PUT", error));
     }
-});
+}
 
-router.delete("/:id", async (req: express.Request, res: express.Response) => {
+async function deleteUser(req: express.Request, res: express.Response) {
     try {
         await User.fromId(req.params.id!).delete();
         res.status(204).send();
@@ -138,6 +141,12 @@ router.delete("/:id", async (req: express.Request, res: express.Response) => {
     catch (error: unknown) {
         res.status(500).send(formatError("DELETE", error));
     }
-});
+}
 
-export default router;
+function formatError(verb: string, error: unknown) {
+    console.error(error);
+    if (error instanceof Error)
+        return { error: `Unexpected ${verb} error: ${error?.message}` };
+    else
+        return { error: "Unknown ${verb} error" };
+}
