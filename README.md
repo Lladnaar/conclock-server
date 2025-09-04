@@ -27,6 +27,13 @@ Implements REST API with core resources of:
 * Run ConClock
   * `npm run start`
 
+## Configuration
+
+The default configuration is set in config.ts. To override create a config.json. Common overrides are:
+
+* server.port: conclock server port number.
+* redis.url: redis database connection url.
+
 ## Redis
 
 As of version 0.2 you will need a redis server available on redis://redis:6379. This can be altered by setting redis.url in settings-local.json.
