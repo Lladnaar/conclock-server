@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server/main.ts",
-    "lint": "eslint .",
+    "lint": "tsc & eslint .",
     "start": "node server/main.ts",
     "build": "docker build -t conclock ."
   },
@@ -14,7 +14,6 @@
   "license": "MIT",
   "homepage": "https://github.com/Lladnaar/conclock#readme",
   "dependencies": {
-    "@types/express": "^5.0.3",
     "express": "^5.1.0",
     "redis": "^5.8.0",
     "uuid": "^11.1.0"
@@ -22,6 +21,8 @@
   "devDependencies": {
     "@eslint/js": "^9.34.0",
     "@stylistic/eslint-plugin": "^5.2.3",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
     "eslint": "^9.34.0",
     "globals": "^16.3.0",
     "typescript-eslint": "^8.41.0"
