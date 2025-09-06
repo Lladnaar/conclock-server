@@ -1,4 +1,5 @@
 import express from "express";
+import {StatusCodes as http} from "http-status-codes";
 import * as data from "../data/redis.ts";
 
 // REST router
@@ -94,38 +95,38 @@ class Event {
 async function postEvent(req: express.Request, res: express.Response) {
     try {
         const event = await Event.fromBody(req.body).save();
-        res.status(201).send(event.toRest(req.baseUrl));
+        res.status(http.CREATED).send(event.toRest(req.baseUrl));
         console.debug(`Added event:${event.id}`);
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("POST", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("POST", error));
     }
 }
 
 async function getEventAll(req: express.Request, res: express.Response) {
     try {
         const events = await Event.getAll();
-        res.status(200).send(events.map(event => event.toRest(req.baseUrl)));
+        res.status(http.OK).send(events.map(event => event.toRest(req.baseUrl)));
         console.debug("Retrieved event:*");
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("GET", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("GET", error));
     }
 }
 
 async function getEvent(req: express.Request, res: express.Response) {
     try {
         const event = await Event.fromId(req.params.id!).load();
-        res.status(200).send(event.toRest(req.baseUrl));
+        res.status(http.OK).send(event.toRest(req.baseUrl));
         console.debug(`Retrieved event:${event.id}`);
     }
     catch (error: unknown) {
         if (error instanceof data.NotFoundError) {
-            res.status(404).send({error: error.message});
+            res.status(http.NOT_FOUND).send({error: error.message});
             console.debug(error.message);
         }
         else {
-            res.status(500).send(formatError("GET", error));
+            res.status(http.INTERNAL_SERVER_ERROR).send(formatError("GET", error));
         }
     }
 }
@@ -133,22 +134,22 @@ async function getEvent(req: express.Request, res: express.Response) {
 async function putEvent(req: express.Request, res: express.Response) {
     try {
         const event = await Event.fromId(req.params.id!, req.body).save();
-        res.status(201).send(event.toRest(req.baseUrl));
+        res.status(http.OK).send(event.toRest(req.baseUrl));
         console.debug(`Updated event:${event.id}`);
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("PUT", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("PUT", error));
     }
 }
 
 async function deleteEvent(req: express.Request, res: express.Response) {
     try {
         await Event.fromId(req.params.id!).delete();
-        res.status(204).send();
+        res.status(http.NO_CONTENT).send();
         console.debug(`Deleted event:${req.params.id}`);
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("DELETE", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("DELETE", error));
     }
 }
 

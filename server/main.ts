@@ -1,6 +1,7 @@
 // Core HTTP server definition
 
 import express from "express";
+import {StatusCodes as http} from "http-status-codes";
 import config from "./config.ts";
 import apiRouter from "./api.ts";
 import timeRouter from "./resource/time.ts";
@@ -24,7 +25,7 @@ server.use("/api/user", userRouter);
 server.use("/api/event", eventRouter);
 
 server.all("/{*any}", (req: express.Request, res: express.Response) => {
-    res.status(404).send("Resource not found");
+    res.status(http.NOT_FOUND).send("Resource not found");
 });
 
 // Start server

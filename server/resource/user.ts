@@ -1,4 +1,5 @@
 import express from "express";
+import {StatusCodes as http} from "http-status-codes";
 import * as data from "../data/redis.ts";
 
 // REST router
@@ -85,38 +86,38 @@ class User {
 async function postUser(req: express.Request, res: express.Response) {
     try {
         const user = await User.fromBody(req.body).save();
-        res.status(201).send(user.toRest(req.baseUrl));
+        res.status(http.OK).send(user.toRest(req.baseUrl));
         console.debug(`Added user:${user.id}`);
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("POST", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("POST", error));
     }
 }
 
 async function getUserAll(req: express.Request, res: express.Response) {
     try {
         const users = await User.getAll();
-        res.status(200).send(users.map(user => user.toRest(req.baseUrl)));
+        res.status(http.OK).send(users.map(user => user.toRest(req.baseUrl)));
         console.debug("Retrieved user:*");
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("GET", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("GET", error));
     }
 }
 
 async function getUser(req: express.Request, res: express.Response) {
     try {
         const user = await User.fromId(req.params.id!).load();
-        res.status(200).send(user.toRest(req.baseUrl));
+        res.status(http.OK).send(user.toRest(req.baseUrl));
         console.debug(`Retrieved user:${user.id}`);
     }
     catch (error: unknown) {
         if (error instanceof data.NotFoundError) {
-            res.status(404).send({error: error.message});
+            res.status(http.NOT_FOUND).send({error: error.message});
             console.debug(error.message);
         }
         else {
-            res.status(500).send(formatError("GET", error));
+            res.status(http.INTERNAL_SERVER_ERROR).send(formatError("GET", error));
         }
     }
 }
@@ -124,22 +125,22 @@ async function getUser(req: express.Request, res: express.Response) {
 async function putUser(req: express.Request, res: express.Response) {
     try {
         const user = await User.fromId(req.params.id!, req.body).save();
-        res.status(201).send(user.toRest(req.baseUrl));
+        res.status(http.OK).send(user.toRest(req.baseUrl));
         console.debug(`Updated user:${user.id}`);
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("PUT", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("PUT", error));
     }
 }
 
 async function deleteUser(req: express.Request, res: express.Response) {
     try {
         await User.fromId(req.params.id!).delete();
-        res.status(204).send();
+        res.status(http.NO_CONTENT).send();
         console.debug(`Deleted user:${req.params.id}`);
     }
     catch (error: unknown) {
-        res.status(500).send(formatError("DELETE", error));
+        res.status(http.INTERNAL_SERVER_ERROR).send(formatError("DELETE", error));
     }
 }
 
