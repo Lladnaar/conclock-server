@@ -1,5 +1,5 @@
 import express from "express";
-import * as data from "./data/redis.ts";
+import * as data from "../data/redis.ts";
 
 // REST router
 
@@ -12,13 +12,13 @@ router.delete("/:id", deleteUser);
 export default router;
 
 // User resource
- 
+
 type RestUser = {
-    id?: string,
-    username?: string,
-    password?: string,
-    name?: string,
-    url?: string
+    id?: string;
+    username?: string;
+    password?: string;
+    name?: string;
+    url?: string;
 };
 
 class User {
@@ -26,7 +26,7 @@ class User {
     username?: string;
     password?: string;
     name?: string;
-    
+
     static fromBody(body: RestUser) {
         const user = new User();
         user.username = body.username ?? "";
@@ -76,11 +76,11 @@ class User {
     }
 
     toRest(baseUrl: string): RestUser {
-        return { ...this, url: `${baseUrl}/${this.id}` };
+        return {...this, url: `${baseUrl}/${this.id}`};
     }
 }
 
-// REST verb definitions 
+// REST verb definitions
 
 async function postUser(req: express.Request, res: express.Response) {
     try {
@@ -146,7 +146,7 @@ async function deleteUser(req: express.Request, res: express.Response) {
 function formatError(verb: string, error: unknown) {
     console.error(error);
     if (error instanceof Error)
-        return { error: `Unexpected ${verb} error: ${error?.message}` };
+        return {error: `Unexpected ${verb} error: ${error?.message}`};
     else
-        return { error: "Unknown ${verb} error" };
+        return {error: "Unknown ${verb} error"};
 }

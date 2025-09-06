@@ -9,6 +9,7 @@ Implements REST API with core resources of:
 * /api - resource directory
 * /api/time - Time syncronisation
 * /api/user - User resources
+* /api/event - Event / Convention / Seminar resource
 
 ## Docker Installation
 

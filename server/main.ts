@@ -3,8 +3,9 @@
 import express from "express";
 import config from "./config.ts";
 import apiRouter from "./api.ts";
-import timeRouter from "./time.ts";
-import userRouter from "./user.ts";
+import timeRouter from "./resource/time.ts";
+import userRouter from "./resource/user.ts";
+import eventRouter from "./resource/event.ts";
 
 // Server parameters
 
@@ -20,6 +21,7 @@ server.use("/", express.static(config.client.path));
 server.use("/api", apiRouter);
 server.use("/api/time", timeRouter);
 server.use("/api/user", userRouter);
+server.use("/api/event", eventRouter);
 
 server.all("/{*any}", (req: express.Request, res: express.Response) => {
     res.status(404).send("Resource not found");
