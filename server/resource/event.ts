@@ -1,6 +1,7 @@
 import express from "express";
-import {InvalidResource, Resource, ResourceId, ResourceContent, ResourceFactory} from "./resource.ts";
+import {Resource, ResourceId, ResourceContent, ResourceFactory} from "./resource.ts";
 import {Rest} from "./rest.ts";
+import {BadRequestError} from "../error.ts";
 
 class EventContent extends ResourceContent {
     name: string;
@@ -14,7 +15,7 @@ class EventContent extends ResourceContent {
             this.endDate = eventContentMaybe.endDate;
         }
         else
-            throw new InvalidResource();
+            throw new BadRequestError("Invalid Event data.");
     }
 
     isValid(eventContentMaybe: object): eventContentMaybe is EventContent {

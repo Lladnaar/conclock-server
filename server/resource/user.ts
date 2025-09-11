@@ -1,6 +1,7 @@
 import express from "express";
-import {InvalidResource, Resource, ResourceId, ResourceContent, ResourceFactory} from "./resource.ts";
+import {Resource, ResourceId, ResourceContent, ResourceFactory} from "./resource.ts";
 import {Rest} from "./rest.ts";
+import {BadRequestError} from "../error.ts";
 
 class UserContent extends ResourceContent {
     username: string;
@@ -15,7 +16,7 @@ class UserContent extends ResourceContent {
             this.name = userContentMaybe.name;
         }
         else
-            throw new InvalidResource();
+            throw new BadRequestError("Invalid User data.");
     }
 
     isValid(userContentMaybe: object): userContentMaybe is UserContent {
