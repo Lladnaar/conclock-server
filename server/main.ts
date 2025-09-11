@@ -7,6 +7,7 @@ import timeRouter from "./resource/time.ts";
 import userRouter from "./resource/user.ts";
 import eventRouter from "./resource/event.ts";
 import {errorHandler, NotFoundError} from "./error.ts";
+import debugMessages from "./debug.ts";
 
 // Server
 
@@ -15,6 +16,7 @@ const server = express();
 // Middleware
 
 server.use(express.json());
+if (config.server.debug) server.use(debugMessages);
 
 // Resources
 

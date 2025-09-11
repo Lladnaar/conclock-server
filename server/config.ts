@@ -1,24 +1,21 @@
-import { readFileSync } from "fs";
+import {readFileSync} from "fs";
 
 // Default configuration settings
 
 const config = {
     server: {
-        port: 9000,
+        port: 80,
+        debug: false,
     },
-    client: {
-        path: "./client",
-    },
-    redis: {
-        url: "redis://localhost:6379",
-    },
+    client: {path: "./client"},
+    redis: {url: "redis://localhost:6379"},
 };
 
 // Read local configuration (if it exists) to override standard settings
 // config.json is .gitignored so that local orerrides are not committed
 
 const localConfig = "./config.json";
-type Config = { [key: string]: string | number | boolean | Config; };
+type Config = {[key: string]: string | number | boolean | Config};
 
 try {
     const configJson = readFileSync(localConfig).toString();
@@ -27,7 +24,7 @@ try {
 }
 catch {
     console.log(`Error reading ${localConfig}, using default config`);
-};
+}
 
 function applyConfig(target: Config, source: Config) {
     for (const key in source) {
@@ -40,7 +37,7 @@ function applyConfig(target: Config, source: Config) {
                 console.warn(`Type mismatch for config key: ${key}`);
         else
             console.warn(`Unknown config key: ${key}`);
-    };
-};
+    }
+}
 
 export default config;
