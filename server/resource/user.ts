@@ -1,51 +1,47 @@
 import express from "express";
-import {Resource, ResourceId, ResourceContent, ResourceFactory} from "./resource.ts";
+import type {ResourceId, ResourceContent} from "./resource.ts";
+import {ResourceFactory, InvalidResourceError} from "./resource.ts";
 import {Rest} from "./rest.ts";
-import {BadRequestError} from "../error.ts";
 
-class UserContent extends ResourceContent {
+// Types
+
+type UserContent = ResourceContent & {
     username: string;
     password: string;
-    name: string | undefined;
+};
 
-    constructor(userContentMaybe: object) {
-        super();
-        if (this.isValid(userContentMaybe)) {
-            this.username = userContentMaybe.username;
-            this.password = userContentMaybe.password;
-            this.name = userContentMaybe.name;
-        }
-        else
-            throw new BadRequestError("Invalid User data.");
-    }
+export type User = ResourceId & UserContent;
 
-    isValid(userContentMaybe: object): userContentMaybe is UserContent {
-        return "username" in userContentMaybe
-            && "password" in userContentMaybe;
-    }
-}
+// Factory
 
-class User extends Resource<UserContent> {}
-
-class UserFactory extends ResourceFactory<UserContent, User> {
+export class UserFactory extends ResourceFactory {
     constructor() { super("user"); }
 
     newContent(content: object): UserContent {
-        return new UserContent(content);
+        if (!this.isValid(content)) throw new InvalidResourceError("Invalid user");
+
+        return {
+            ...super.newContent(content),
+            username: content.username,
+            password: content.password,
+        };
     }
-    newResource(id: ResourceId, content: UserContent) {
-        return new User(id, content);
+
+    isValid(item: object): item is UserContent {
+        return (super.isValid(item)
+            && "username" in item && typeof item.username === "string"
+            && "password" in item && typeof item.password === "string");
     }
 }
 
-// REST router
+// Router
 
-const user = new Rest<UserContent, User>(new UserFactory());
+const userRest = new Rest(new UserFactory());
 
 const router = express.Router();
-router.get("/", user.getAll.bind(user));
-router.get("/:id", user.get.bind(user));
-router.post("/", user.post.bind(user));
-router.put("/:id", user.put.bind(user));
-router.delete("/:id", user.delete.bind(user));
+router.get("/", userRest.getAll.bind(userRest));
+router.get("/:id", userRest.get.bind(userRest));
+router.post("/", userRest.post.bind(userRest));
+router.put("/:id", userRest.put.bind(userRest));
+router.delete("/:id", userRest.delete.bind(userRest));
 export default router;

@@ -1,51 +1,47 @@
 import express from "express";
-import {Resource, ResourceId, ResourceContent, ResourceFactory} from "./resource.ts";
+import type {ResourceId, ResourceContent} from "./resource.ts";
+import {ResourceFactory, InvalidResourceError} from "./resource.ts";
 import {Rest} from "./rest.ts";
-import {BadRequestError} from "../error.ts";
 
-class EventContent extends ResourceContent {
-    name: string;
+// Types
+
+type EventContent = ResourceContent & {
     startDate: Date;
     endDate: Date;
-    constructor(eventContentMaybe: object) {
-        super();
-        if (this.isValid(eventContentMaybe)) {
-            this.name = eventContentMaybe.name;
-            this.startDate = eventContentMaybe.startDate;
-            this.endDate = eventContentMaybe.endDate;
-        }
-        else
-            throw new BadRequestError("Invalid Event data.");
-    }
+};
 
-    isValid(eventContentMaybe: object): eventContentMaybe is EventContent {
-        return "name" in eventContentMaybe
-            && "startDate" in eventContentMaybe
-            && "endDate" in eventContentMaybe;
-    }
-}
+export type Event = ResourceId & EventContent;
 
-class Event extends Resource<EventContent> {}
+// Factory
 
-class EventFactory extends ResourceFactory<EventContent, Event> {
+export class EventFactory extends ResourceFactory {
     constructor() { super("event"); }
 
     newContent(content: object): EventContent {
-        return new EventContent(content);
+        if (!this.isValid(content)) throw new InvalidResourceError("Invalid event");
+
+        return {
+            ...super.newContent(content),
+            startDate: content.startDate,
+            endDate: content.endDate,
+        };
     }
-    newResource(id: ResourceId, content: EventContent) {
-        return new Event(id, content);
+
+    isValid(item: object): item is EventContent {
+        return super.isValid(item)
+            && ("startDate" in item && typeof item.name === "string")
+            && ("endDate" in item && typeof item.name === "string");
     }
 }
 
-// REST router
+// Router
 
-const event = new Rest<EventContent, Event>(new EventFactory());
+const eventRest = new Rest(new EventFactory());
 
 const router = express.Router();
-router.get("/", event.getAll.bind(event));
-router.get("/:id", event.get.bind(event));
-router.post("/", event.post.bind(event));
-router.put("/:id", event.put.bind(event));
-router.delete("/:id", event.delete.bind(event));
+router.get("/", eventRest.getAll.bind(eventRest));
+router.get("/:id", eventRest.get.bind(eventRest));
+router.post("/", eventRest.post.bind(eventRest));
+router.put("/:id", eventRest.put.bind(eventRest));
+router.delete("/:id", eventRest.delete.bind(eventRest));
 export default router;
