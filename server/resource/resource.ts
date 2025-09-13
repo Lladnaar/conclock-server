@@ -1,52 +1,37 @@
 import * as data from "../data/redis.ts";
 import {NotFoundError, BadRequestError} from "../error.ts";
 
-export class ResourceId {
+export class InvalidResourceError extends Error {}
+
+export type ResourceId = {
     id: string;
+    url?: string;
+};
 
-    constructor(id: string) {
-        this.id = id;
-    }
+export type ResourceContent = {name: string};
 
-    toRest(baseUrl: string): object {
-        return {id: this.id, url: `${baseUrl}/${this.id}`};
-    }
-}
+export type Resource = ResourceId & ResourceContent;
 
-export class ResourceContent {
-    toData() {
-        return {...this};
-    }
-}
-
-export class Resource<T extends ResourceContent> {
-    id: ResourceId;
-    content: T;
-
-    constructor(id: ResourceId, content: T) {
-        this.id = id;
-        this.content = content;
-    }
-
-    toRest(baseUrl: string): object {
-        return {...this.id.toRest(baseUrl), ...this.content};
-    }
-
-    toData() {
-        return this.content.toData();
-    }
-}
-
-export abstract class ResourceFactory<T extends ResourceContent, U extends Resource<T>> {
+export class ResourceFactory {
     type: string;
 
     constructor(type: string) {
         this.type = type;
     }
 
-    newId(id: string) { return new ResourceId(id); }
-    abstract newContent(content: object): T;
-    abstract newResource(id: ResourceId, content: T): U;
+    newId(id: string): ResourceId { return {id}; }
+
+    newResource(id: ResourceId, content: ResourceContent): Resource { return {...id, ...content}; }
+
+    newContent(content: object): ResourceContent {
+        if (!this.isValid(content)) throw new InvalidResourceError("Invalid resource");
+
+        return {name: content.name};
+    }
+
+    isValid(item: object): item is ResourceContent {
+        return ("name" in item && typeof item.name === "string");
+    }
 
     async loadAll(): Promise<ResourceId[]> {
         const ids = await data.list(this.type);
@@ -70,18 +55,30 @@ export abstract class ResourceFactory<T extends ResourceContent, U extends Resou
 
     async create(contentData: object) {
         const content = this.newContent(contentData);
-        const id = await data.add(this.type, content.toData());
+        const id = await data.add(this.type, this.toData(content));
         return this.newResource(this.newId(id), content);
     }
 
     async save(id: string, content: object) {
         const resource = this.newResource(this.newId(id), this.newContent(content));
-        await data.set(this.type, resource.id.id, resource.toData());
+        await data.set(this.type, resource.id, this.toData(resource));
         return resource;
     }
 
     async delete(id: string): Promise<undefined> {
         await data.del(this.type, id);
         return undefined;
+    }
+
+    toRest(item: ResourceId): object {
+        return {
+            id: item.id,
+            url: `/api/${this.type}/${item.id}`,
+            ...(this.isValid(item) ? this.newContent(item) : {}),
+        };
+    }
+
+    toData(item: ResourceContent): object {
+        return this.newContent(item);
     }
 }
