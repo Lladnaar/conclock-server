@@ -4,7 +4,7 @@ import {readFileSync} from "fs";
 
 const config = {
     server: {
-        port: 80,
+        port: 8080,
         debug: false,
     },
     client: {path: "./client"},
