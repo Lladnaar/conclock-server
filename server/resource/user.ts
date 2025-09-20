@@ -2,12 +2,14 @@ import express from "express";
 import type {ResourceId, ResourceContent} from "./resource.ts";
 import {ResourceFactory, InvalidResourceError} from "./resource.ts";
 import {Rest} from "./rest.ts";
+import bcrypt from "bcrypt";
+import * as data from "../data/redis.ts";
 
 // Types
 
-type UserContent = ResourceContent & {
+export type UserContent = ResourceContent & {
     username: string;
-    password: string;
+    password: string | undefined;
 };
 
 export type User = ResourceId & UserContent;
@@ -28,9 +30,37 @@ export class UserFactory extends ResourceFactory {
     }
 
     isValid(item: object): item is UserContent {
-        return (super.isValid(item)
-            && "username" in item && typeof item.username === "string"
-            && "password" in item && typeof item.password === "string");
+        let validity = super.isValid(item);
+        validity &&= "username" in item && typeof item.username === "string";
+        validity &&= !("password" in item) || ("password" in item && (typeof item.password === "string" || typeof item.password == "undefined"));
+        return validity;
+    }
+
+    async save(id: string, user: {password: string | undefined}) {
+        if (typeof user.password === "string")
+            user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
+        else {
+            const existingUser = await data.get(this.type, id);
+            user.password = existingUser.password;
+        }
+        return super.save(id, user);
+    }
+
+    async setPassword(user: ResourceId, password: string): Promise<void> {
+        const hash = await bcrypt.hash(password, await bcrypt.genSalt());
+        await data.update(this.type, user.id, {password: hash});
+    }
+
+    async checkPassword(user: ResourceId, password: string): Promise<boolean> {
+        const userData = await data.get(this.type, user.id);
+        if ("password" in userData && typeof userData.password === "string")
+            return bcrypt.compare(password, userData.password);
+        else
+            return false;
+    }
+
+    async unsetPassword(user: ResourceId): Promise<void> {
+        await data.update(this.type, user.id, {password: undefined});
     }
 }
 

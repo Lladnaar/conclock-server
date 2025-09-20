@@ -2,6 +2,7 @@ import * as data from "../data/redis.ts";
 import {NotFoundError, BadRequestError} from "../error.ts";
 
 export class InvalidResourceError extends Error {}
+export class UnauthorisedOperationError extends Error {}
 
 export type ResourceId = {
     id: string;
